@@ -72,4 +72,4 @@ The component `src/components/LemonTree.tsx` maps the user’s USD balance
 * React code follows OWASP guidelines (no dangerous HTML, strict props).
 
 ## 🤝 License
-MIT © 2025 Ever Allende
+MIT © 2025 vvcc77 - PhoenixZeroph
