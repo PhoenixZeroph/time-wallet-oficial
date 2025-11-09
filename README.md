@@ -1,4 +1,4 @@
-Time-Wallet Mini App 🍋
+Time-Wallet Mini App ⏳🌳🍋
 =======================
 
 This repository contains a **Lemon Cash Mini App** implementing the Time‑Wallet concept
