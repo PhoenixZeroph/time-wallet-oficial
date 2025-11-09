@@ -1,27 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "allowJs": false,
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
+    "lib": ["DOM", "ES2022"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   },
-  "include": [
-    "src",
-    "test",
-    "contracts",
-    "hardhat.config.ts"
-  ]
+  "include": ["src", "scripts", "hardhat.config.ts"]
 }
