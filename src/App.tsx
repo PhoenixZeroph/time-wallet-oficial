@@ -1,31 +1,106 @@
-import { useState, useEffect } from 'react';
-import { LemonMiniApp } from '@lemoncash/mini-app-sdk';
-import { TreeContainer } from './hooks/useTreeStage';
+import React, { useEffect, useState } from "react";
+import {
+  authenticate,
+  deposit,
+  isWebView,
+  ChainId,
+  TransactionResult
+} from "@lemoncash/mini-app-sdk";
+import { ethers } from "ethers";
+import { useMaturity } from "./hooks/useMaturity";
+import { useSemiannualReview } from "./hooks/useSemiannualReview";
+
+const chainId = Number(import.meta.env.VITE_CHAIN_ID) as ChainId;
+const contractAddress = __CONTRACT_ADDRESS__ as `0x${string}`;
+const baseRpcUrl = __BASE_RPC__ as string;
+
+const vaultAbi = [
+  "function vaults(address) view returns (uint256 balance,uint64 firstDepositAt,uint64 maturityAt)"
+];
 
 export default function App() {
-  const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
+  const [wallet, setWallet] = useState<string>();
+  const [vault, setVault] = useState<{
+    balance: string;
+    firstDepositAt: number | null;
+  }>({ balance: "0", firstDepositAt: null });
+  const [loading, setLoading] = useState(true);
 
+  const maturity = useMaturity(vault.firstDepositAt);
+  const review = useSemiannualReview(vault.firstDepositAt);
+
+  // ───────────── Init ─────────────
   useEffect(() => {
-    async function fetchBalance() {
-      const b = await LemonMiniApp.wallet.getUSDValue();
-      setBalanceUsd(b);
-    }
-    fetchBalance();
-    LemonMiniApp.events.on('Deposit', fetchBalance);
-    return () => LemonMiniApp.events.off('Deposit', fetchBalance);
+    (async () => {
+      if (!isWebView()) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const result = await authenticate({ chainId });
+        if (result.result !== TransactionResult.SUCCESS) throw new Error("Auth failed");
+        setWallet(result.data.wallet);
+        await refreshVault(result.data.wallet);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
+  // ───────────── Helpers ─────────────
+  const refreshVault = async (addr: string) => {
+    const provider = new ethers.JsonRpcProvider(baseRpcUrl);
+    const contract = new ethers.Contract(contractAddress, vaultAbi, provider);
+    const v = await contract.vaults(addr);
+    setVault({
+      balance: ethers.formatEther(v.balance),
+      firstDepositAt: Number(v.firstDepositAt)
+    });
+  };
+
+  const handleDeposit = async () => {
+    const res = await deposit({ amount: "3", tokenName: "USDC", chainId });
+    if (res.result !== TransactionResult.SUCCESS) {
+      console.error("Deposit failed:", res);
+      return;
+    }
+    wallet && (await refreshVault(wallet));
+  };
+
+  // ───────────── UI ─────────────
+  if (!isWebView()) {
+    return <p>📱 Abrí esta Mini App dentro de Lemon Cash.</p>;
+  }
+  if (loading) return <p>⏳ Cargando...</p>;
+
   return (
-    <div className="min-h-screen bg-neutral-900 text-white p-8">
-      <h1 className="text-2xl font-bold mb-4">Time‑Wallet Dashboard</h1>
-      {balanceUsd === null ? (
-        <p>Cargando balance…</p>
-      ) : (
-        <>
-          <p className="mb-6">Balance: US$ {balanceUsd.toFixed(2)}</p>
-          <TreeContainer balanceUsd={balanceUsd} />
-        </>
+    <main className="p-4 flex flex-col gap-4">
+      {review.show && (
+        <div className="bg-yellow-200 p-3 rounded-xl">
+          <p className="font-semibold">
+            Semiannual review disponible — rebalanceá 50 % en Aave
+          </p>
+          <button className="btn" onClick={() => console.log("TODO rebalance")}>
+            Rebalancear
+          </button>
+        </div>
       )}
-    </div>
+
+      <section className="border p-4 rounded-xl">
+        <h2 className="text-lg font-bold">Bóveda</h2>
+        <p>Saldo: {vault.balance} ETH</p>
+        <p>
+          Progreso: {maturity.pct.toFixed(1)} % — faltan {maturity.monthsRemaining} meses
+        </p>
+        <button className="btn mt-2" onClick={handleDeposit}>
+          Aportar 3 USDC
+        </button>
+      </section>
+
+      <section className="border p-4 rounded-xl">
+        <h2 className="text-lg font-bold">Wallet</h2>
+        <p>{wallet}</p>
+      </section>
+    </main>
   );
 }
