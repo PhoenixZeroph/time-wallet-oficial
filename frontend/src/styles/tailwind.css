@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+:root {
+--lemon-primary:#00F068;
+--lemon-accent:#806CF2;
+--lemon-black:#000000;
+}
+}
