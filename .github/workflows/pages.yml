@@ -13,7 +13,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with: { version: 8, run_install: true }
 
-      - run: pnpm --filter frontend run build
+      - run: cd frontend && pnpm run build
 
       # NUEVA versión 3 ➜ usa upload-artifact v4 internamente
       - uses: actions/upload-pages-artifact@v3
