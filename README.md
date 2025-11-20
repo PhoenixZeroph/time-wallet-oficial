@@ -28,6 +28,7 @@ El usuario ve un limonero tipo “Tamagotchi” que crece a medida que aumenta s
 ├── scripts/               # Scripts de Foundry (DeployTimeWallet.s.sol)
 ├── src/                   # Frontend React + TS
 ├── test/                  # Tests Hardhat
+├── frontend               # GUI Dev Template 
 ├── .env.example           # Template de environment variables
 ├── DEPLOYMENTS.md         # Direcciones on-chain por red
 ├── foundry.toml           # Configuración Foundry
