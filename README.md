@@ -23,7 +23,7 @@ El usuario ve un limonero tipo “Tamagotchi” que crece a medida que aumenta s
 
 ```txt
 .
-├── assets/                # SVG sprites del limonero (semilla -> árbol gigante)
+├── assets/tree            # SVG sprites del limonero (semilla -> árbol gigante)
 ├── contracts/             # Smart contracts Solidity (TimeWallet.sol, etc.)
 ├── scripts/               # Scripts de Foundry (DeployTimeWallet.s.sol)
 ├── src/                   # Frontend React + TS
