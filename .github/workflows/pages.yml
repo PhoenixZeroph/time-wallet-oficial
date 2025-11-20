@@ -1,18 +1,31 @@
 name: Pages
-on: push
+on:
+  push:
+    branches: [main]      # o tu branch
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v2
-        with: { version: 8 }
-      - run: pnpm i && pnpm run build --filter frontend
-      - uses: actions/upload-pages-artifact@v2
-        with: { path: frontend/dist }
+        with: { version: 8, run_install: true }
+
+      - run: pnpm --filter frontend run build
+
+      # NUEVA versión 3 ➜ usa upload-artifact v4 internamente
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions: { pages: write, id-token: write }
+    permissions:
+      id-token: write      # para OIDC
+      pages: write
+    # NUEVA versión 4
     steps:
-      - uses: actions/deploy-pages@v3
+      - uses: actions/deploy-pages@v4
