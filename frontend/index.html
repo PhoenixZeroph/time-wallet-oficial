@@ -1,13 +1,19 @@
-<!-- frontend/index.html -->
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Time Wallet</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time-Wallet mini-app</title>
+
+    <!-- icono opcional (usa el tuyo o quítalo) -->
+    <link rel="icon" href="/nft/seed.png" />
   </head>
-  <body>
-    <div id="app"></div>
-    <!-- este path funciona con la raíz por defecto -->
-    <script type="module" src="/src/index.ts"></script>
+
+  <body class="m-0 p-0">
+    <!-- React montará la UI aquí -->
+    <div id="root"></div>
+
+    <!-- ⚠️ IMPORTANTE: ruta relativa (sin / inicial) -->
+    <script type="module" src="./src/index.ts"></script>
   </body>
 </html>
