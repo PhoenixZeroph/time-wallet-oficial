@@ -1,16 +1,30 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import litcss from "vite-plugin-lit-css";
-import path from "node:path";
+import { resolve } from "node:path";
 
+// ─────────────────────────────────────────────
+// Vite + React + Tailwind  ✦  con lit-css
+// • el plugin lit-css solo procesa *.css / *.lit.css
+// • alias "@" → src/  (import '@/components/…')
+// • build en carpeta dist/ (limpia antes)
+// ─────────────────────────────────────────────
 export default defineConfig({
   plugins: [
     react(),
-    // ⬇️ evita que lit-css toque .tsx / .ts
-    litcss({ include: /\.lit\.css$/ })
+    litcss({
+      include: ["**/*.css", "**/*.lit.css"] // evita intentar parsear .tsx
+    })
   ],
+
   resolve: {
-    alias: { "@": path.resolve(__dirname, "src") }
+    alias: {
+      "@": resolve(__dirname, "src")
+    }
   },
-  build: { outDir: "dist", emptyOutDir: true }
+
+  build: {
+    outDir: "dist",
+    emptyOutDir: true
+  }
 });
