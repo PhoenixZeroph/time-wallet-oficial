@@ -1,10 +1,11 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
-import TimeWalletApp from "./TimeWalletApp";
+import ReactDOM from "react-dom/client";
+import App from "./App";               // ← componente raíz definitivo
 
 const container = document.getElementById("app")!;
-createRoot(container).render(
+
+ReactDOM.createRoot(container).render(
   <React.StrictMode>
-    <TimeWalletApp />
+    <App />                            {/* Time-Wallet UI */}
   </React.StrictMode>
 );
