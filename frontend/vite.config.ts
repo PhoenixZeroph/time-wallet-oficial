@@ -5,16 +5,12 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [
-    react(),   // soporte React / TSX
-    litcss()   // mantienes tus styled-lit components
+    react(),
+    // ⬇️ evita que lit-css toque .tsx / .ts
+    litcss({ include: /\.lit\.css$/ })
   ],
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src") // ↪ permite importar con "@/..."
-    }
+    alias: { "@": path.resolve(__dirname, "src") }
   },
-  build: {
-    outDir: "dist",
-    emptyOutDir: true
-  }
+  build: { outDir: "dist", emptyOutDir: true }
 });
