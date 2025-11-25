@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body {
+  @apply bg-black text-white m-0 p-0 overflow-x-hidden;
+}
+
+::selection {
+  background: #00f06840;
+}
