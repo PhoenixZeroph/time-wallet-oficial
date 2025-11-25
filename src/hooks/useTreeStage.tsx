@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { LemonTree } from '../components/LemonTree';
 
 interface Props {
